@@ -1,0 +1,71 @@
+--DML
+--created function without any DDL and DML
+create or replace function get_result return number as
+begin
+    return 1;
+end;
+
+
+select get_result from dual;
+
+-----cannot perform a DML operation inside a query ----------
+create table emp (name varchar2(10),salary number);
+insert into emp values('Nitesh',23000);
+
+create or replace function get_result return number as
+begin
+    update emp set salary=45000 where name='Nitesh';
+    return 1;
+    
+end;
+
+select get_result from dual;
+
+-------Autonomous trasaction-------------------------
+--if commit not added ---(error occured as active autonomous transaction detected and rolled back)
+create or replace function get_result return number as
+    pragma autonomous_transaction;
+begin
+    update emp set salary=45000 where name='Nitesh';
+    commit;
+    return 1;
+    
+end;
+
+select get_result from dual;
+
+---DDL
+---Function not allow DDL command directly to used for thenwe used dynamic query along with pragma transaction
+create or replace function get_fun1 return number as
+  
+begin
+    create table stud_1(id number);
+    return 1;
+    
+end;
+
+
+---error occurred cannot perform a DDL
+create or replace function get_fun1 return number as
+  
+begin
+    execute immediate 'create table stud_1(id number)';
+    execute immediate 'drop table stud_1';
+    return 1;
+    
+end;
+
+select get_fun1 from dual;
+
+
+--return value as 1
+create or replace function get_fun1 return number as
+  pragma autonomous_transaction;
+begin
+    execute immediate 'create table stud_1(id number)';
+    execute immediate 'drop table stud_1';
+    return 1;
+    
+end;
+
+select get_fun1 from dual;

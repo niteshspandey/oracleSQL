@@ -1,0 +1,10 @@
+Find maximum salary from department wise.
+
+select * from emp where (deptno,sal) in
+(select deptno,max(sal) from emp group by deptno)
+
+or
+
+select (select dname from dept where
+dept.deptno=emp.deptno) dname,max(sal))
+from emp group by deptno.

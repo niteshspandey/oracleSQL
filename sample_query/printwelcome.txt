@@ -1,0 +1,4 @@
+select rownum,
+        substr('Welcome',1,rownum),
+        substr('Welcome',rownum)
+    from dual connect by level<=length('Welcome');

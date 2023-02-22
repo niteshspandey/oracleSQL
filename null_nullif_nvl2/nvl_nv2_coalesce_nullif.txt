@@ -1,0 +1,42 @@
+/*
+
+NVL(Null Value)--two arguments
+
+select nvl('A','B') from dual;
+select nvl(null,'B') from dual;
+select nvl('A',null) from dual;
+select nvl(null,null) from dual;
+
+NVL2(Null Value)--three arguments
+
+select NVL2('A','B','C') from dual;--if A is not null then value should be B otherwise it should be C
+select NVL2(null,'B','C') from dual;
+select NVL2('A',null,'C') from dual;
+select NVL2(null,null,'C') from dual;
+select NVL2('A',null,null) from dual;
+select NVL2(null,null,null) from dual;--return null
+
+nullif--two argument
+
+select nullif('A','A') from dual;--if A and B is same  then value returns as null
+select nullif(null,'B') from dual; --first value should not be null(Got error)
+select nullif('A',null) from dual;--if 2nd value is null then it return A
+select nullif(null,null) from dual;--got error
+select nullif('A','B') from dual;--if A and B  are not same then it return first element
+select nullif(null,null) from dual;--return null
+
+
+
+coalesce--take anu number of arguments
+return first non null value.
+
+select coalesce('A','B','C','D','E') from dual;--return A
+select coalesce(null,'B','C','D','E') from dual;--return B
+select coalesce(null,null,'C','D','E') from dual;--return C
+select coalesce(null,null,null,'D','E') from dual;--return D
+select coalesce(null,null,null,null,'E') from dual;--return E
+select coalesce(null,null,null,null,null) from dual;--return null
+
+
+*/
+

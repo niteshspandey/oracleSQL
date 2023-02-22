@@ -1,0 +1,107 @@
+/*-- create table stud
+-- (stud_name varchar2(20),
+-- Status varchar2(20))
+
+-- insert into stud values('Nitesh','P');
+-- insert into stud values('Sarvesh','F');
+-- insert into stud values('Pandey','P');
+-- insert into stud values('Soumya','P');
+-- insert into stud values('Purnima',null);
+
+
+--Decode
+select stud_name,
+Status,
+decode(Status,'P','Pass','F','Fail','Not Known') as result 
+from stud;
+
+
+--Case method1
+select stud_name,status,
+case Status
+    when 'P' then 'Pass'
+    when 'F' then 'Fail'
+    else 'Result not know'
+end as result
+from stud;
+
+--method2
+select stud_name,status,
+case 
+    when status ='P' then 'Pass'
+    when status ='F' then 'Fail'
+    else 'Result not know'
+end as result
+from stud;
+
+
+--Case is extended version of decode
+--Case allow different operation in case statement but decode does not.(logical operation--and or etc)
+--case except same data type which is mention in condition
+
+
+select 
+    decode(:input,'1','One',2,'Two',3,'Three','None')
+from dual;
+
+select 
+case :input 
+    when '1' then 'Pass'
+    when 2 then 'Fail'
+    when '3' then 'not know'
+    else 'None'
+end as result
+from dual;
+
+inconsistent datatypes: expected CHAR got NUMBER
+
+*/
+
+--function or pseudo-column 'DECODE' may be used inside a SQL statement only 
+declare 
+    lv_result varchar2(100);
+    lv_input varchar2(10):='P';
+
+begin
+    lv_result:=decode(lv_input,'P','Pass','F','Fail','Not Known');
+end;
+
+--executed properly
+declare 
+    lv_result varchar2(100);
+    lv_input varchar2(10):='P';
+
+begin
+    select decode(lv_input,'P','Pass','F','Fail','Not Known') into lv_result from dual;
+end;
+
+
+----Executed properly(case is a part of expression or part of sellect statmenet also)
+declare 
+    lv_result varchar2(100);
+    lv_input varchar2(10):='P';
+
+begin
+    lv_result:=case lv_input
+            when 'P' then 'Pass'
+            when 'F' then 'Fail'
+            else 'Not Known'
+            end;
+end;
+
+----------------------------------
+declare 
+    lv_result varchar2(100);
+    lv_input varchar2(10):='P';
+
+begin
+    case lv_input
+            when 'P' then 
+            lv_result:='Pass';
+            when 'F' then 
+            lv_result:='Fail';
+            proc1---we can procedure also 
+            else 
+            lv_result:='Not Known';
+            end case;
+end;

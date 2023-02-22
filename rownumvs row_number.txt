@@ -1,0 +1,11 @@
+Top 2 salary using rownum function
+
+it is also called pseudo columns
+
+select e.* 
+from (select name,salary from emp order by salary desc) e 
+where rownum<=2;
+
+row_number()--analytics function
+
+select name,salary,row_number() over(partition by dept order by salary desc) as rk from emp; 

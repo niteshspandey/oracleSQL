@@ -1,0 +1,21 @@
+--Replace
+--only matching words get repaced 
+--taking 3 paramenter
+--length of 2nd and 3rd parameter may or maynot be same.
+
+select replace('Welcome to goa','goa','Mumbai') from dual;
+select replace('Welcome to goa','goa','Chennai') from dual;
+select replace('Welcome to goa','go','delhi') from dual;--only replace go with delhi
+select replace('Welcome to goa','goa ','UP') from dual;
+
+
+--transalate
+--same as replace but it return null if 3rd parameter is null
+--it check the 2nd and 3rd parameter length and replace the data accordingly
+--character by character replacing perform
+
+select translate('ABCD EFGH IJKL','ABC','123') from dual;
+select translate('ABCD EFGH IJKL','ABC','12') from dual;
+select translate('ABCD EFGH IJKL','ABC','1') from dual;
+select translate('ABCD EFGH IJKL','ABC','1345667') from dual;--replace only 3 character and remaining avoid 
+select translate('ABCD EFGH IJKL','ABC',null) from dual; --return null

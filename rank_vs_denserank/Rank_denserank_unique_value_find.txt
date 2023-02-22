@@ -1,0 +1,77 @@
+--create table emp(name varchar2(20),roll_no number);
+
+-- insert into emp values('Nitesh',1);
+-- insert into emp values('Pandey',2);
+-- insert into emp values('Nitesh',3);
+-- insert into emp values('Nitesh',4);
+-- insert into emp values('Sarvesh',5);
+-- insert into emp values('Nitesh',6);
+-- insert into emp values('Purnima',7);
+-- insert into emp values('Nitesh',8);
+-- insert into emp values('Soumya',9);
+-- insert into emp values('Nitesh',10);
+-- insert into emp values('Tara',11);
+
+
+
+
+-- select emp.,rank() over(order by name) rnk,
+--         dense_rank() over(order by name) dense_rnk from emp;
+
+        
+------------------------------
+select unique name from emp;
+
+select name
+    from emp group by name
+order by name;
+
+
+
+select name from emp
+union
+select name from emp;
+
+
+--performance wise good
+select name from emp
+union
+select null from dual where 1=2;
+
+
+
+select name from emp
+intersect
+select name from emp;
+
+select name from emp
+minus
+select null from dual;
+
+
+
+--Analytics function
+select name from 
+(select name ,
+row_number() over(partition by name order by name) r 
+from emp) 
+where r=1;
+
+
+---Rank function
+select name from 
+(select name ,
+rank() over(partition by name order by rownum) r 
+from emp) 
+where r=1;
+
+
+select name from emp where rowid in(
+select min(rowid) from emp group by name)
+order by name;
+
+
+select name from emp a1 where 1=
+(select count(1) from emp a2 where a1.name=a2.name and 
+                                a1.rowid =a2.rowid)
+

@@ -1,0 +1,36 @@
+/*
+create table emp
+(name varchar2(20),
+salary number,
+deptno varchar2(10));
+
+insert into emp(name,salary,deptno)values ('Nitesh',23456,'IT');
+insert into emp(name,salary,deptno)values ('Sarvesh',40000,'IT');
+insert into emp(name,salary,deptno)values ('Pandey',20456,'OPS');
+insert into emp(name,salary,deptno)values ('Soumya',3456,'IT');
+insert into emp(name,salary,deptno)values ('Purnima',09764,'RD');
+insert into emp(name,salary,deptno)values ('Bhavesh',12000,'IT');
+insert into emp(name,salary,deptno)values ('Rohit',20000,'Marketing');
+insert into emp(name,salary,deptno)values ('Mahesh',50000,'IT');
+
+*/
+select * from emp;
+
+declare 
+cursor get_emp_data is 
+    select name from emp;
+    v_name varchar2(100);
+
+begin
+    open get_emp_data;
+    loop
+        fetch get_emp_data into v_name;
+        exit when get_emp_data%notfound;
+        dbms_output.put_line('v name ='||v_name);
+    end loop;
+    close get_emp_data;
+end;
+
+
+--------------
+select * from V$OPEN_CURSOR;

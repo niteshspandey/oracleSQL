@@ -1,0 +1,97 @@
+Types of indexes
+
+1.b-tree
+2.bitmap
+3.function based
+4.reverse index
+5.composite index(multiple indexes)
+
+
+creation of indexes
+
+create index ind_btree_tmp on tmp(emp_no)
+create bitmap index ind_bitmap_tmp on tmp(emp_no)
+create index ind_fun_tmp on tmp(upper(emp_name))
+create index ind_reverse_tmp on tmp(emp_no) reverse
+create index ind_composit_ontmp on tmp(emp_no,emp_name)
+
+getting index related information
+
+select * from user_indexes where table_name="emp_t";
+select * from user_ind_columns where table_name="emp_t";--return column name along with different created index name 
+select * from user_ind_statistics where table_name="emp_t";
+select * from user_ind_expressions where  table_name="emp_t";---return value in case of reverse index
+select * from dba_object_usage;--check whether the created index are in used or not.
+
+
+
+
+b-tree
+Balance tree is most common type of database index(default index).
+A b-tree index is an ordered list of values divided into ranges.
+
+B-tree indexes are suitable for columns containing high number if unique values
+
+ex-
+1.account number inbanking system.
+2.student registered number
+3.Employeeid.
+4.Mail id.
+
+1.Range scan
+scan for range of value
+create index index_name on table_name(column_name)
+
+2.Unique scan
+check only first occurance of record if find then return the value instead of searching to whole range.
+faster as complared to range scan
+create unique index index_name on table_name(column_name)
+
+3.Index full scan
+instead of complete table it scan the index value created and return the value which is lower in size and fast
+then complete table scan(eg if index created on salary column then instead of going to main table it directly 
+goto index salary and return the result which having one columns)
+
+4.Index full scan (min /max)
+value sotred in sorted form at the time of creating index with rowid so it is east to find and return the value.
+
+5.Index fast full scan
+taking the data from 2 different created index and join the result  as single resultset.
+
+We can create index on all columns of table but it is not recommonded .it slow down the performance of query result.
+
+Bitmap Index
+In a bitmap  index,the database store a bitmap for each index key.
+
+bitmap index use when
+1.There is low cardinality (no of distince value is small)
+2.Not much or less modification by DML statement
+
+adv-Faster
+disadv-not recommonded for high DML operation scenario
+
+
+Function based index
+compute the value of a function or expression involving one or more columns and stores it in an index.
+
+function based indexes are efficient for evaluating statement that contain functions in there where clauses.
+
+
+Reverse index 
+A reverse key index is a type of B-tree index that physicallly reverses the bytes of each index key while keeping the column order.
+
+solve the problem and issue of b-tree index which is 
+index lock contention.
+value swap and then stored ,no sorting done for this type of index.
+
+Disadv. 
+not good for range scan
+
+
+Benefit
+Performance improvement
+
+drawback
+1.Index consumes considerable amount of space
+2.index needs to be managed
+3.DML performance might get impacted
