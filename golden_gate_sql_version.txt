@@ -1,0 +1,22 @@
+Oracle products follow a custom release-numbering and -naming convention. The "c" in the current release, Oracle Database 21c, stands for "Cloud". 
+Previous releases (e.g. Oracle Database 10g and Oracle9i Database) have used suffixes of "g" and "i" which stand for "Grid" and "Internet" respectively.
+
+
+Oracle Database 21c
+December 2020 (cloud)
+August 2021 (Linux)
+
+Oracle Database 19c	
+February 2019 (Exadata)
+April 2019 (Linux)	
+June 2019 (cloud)
+
+Oracle Database 18c
+February 2018 (cloud, Exadata)
+July 2018 (other)
+
+Oracle Database 12c 
+July 2013
+
+Oracle Database 11g 
+September 2009
