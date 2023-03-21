@@ -76,7 +76,7 @@ begin
 end;
 
 
-----Executed properly(case is a part of expression or part of sellect statmenet also)
+----Executed properly(case is a part of expression or part of select statmenet also)
 declare 
     lv_result varchar2(100);
     lv_input varchar2(10):='P';
