@@ -52,3 +52,47 @@ PIVOT (
   aggregate_function FOR pivot_column IN (list_of_values)
 )
 ORDER BY…;
+
+--Pivot Example
+create table t_emp_desgn_det(
+emp_name varchar2(10),job varchar2(40),dept_no number,salary number);
+
+insert into t_emp_desgn_det values('Nitesh','Executive',10,20000);
+insert into t_emp_desgn_det values('Sarvesh','Carpenter',10,30000);
+insert into t_emp_desgn_det values('Sam','Admin',10,40000);
+insert into t_emp_desgn_det values('Tara','Housewife',20,45000);
+insert into t_emp_desgn_det values('Tara1','Housewife',20,45000);
+insert into t_emp_desgn_det values('Tara2','Housewife',20,45000);
+insert into t_emp_desgn_det values('Purnima','Engineer',30,25000);
+insert into t_emp_desgn_det values('Arun','BigData',30,50000);
+
+select * from t_emp_desgn_det;
+SELECT * FROM
+    (SELECT dept_no,
+            job,
+            salary
+        FROM
+            t_emp_desgn_det
+    ) PIVOT (
+        SUM(salary)
+        FOR dept_no
+        IN (10,20,30)
+    );
+
+---------
+--Unpivot example
+SELECT
+    *
+FROM
+    (
+        SELECT
+            job,
+            emp_name,
+            CAST(dept_no AS VARCHAR2(10)) dept_no
+        FROM
+            t_emp_desgn_det
+    ) UNPIVOT ( col_val
+        FOR column_name
+    IN ( job,
+         emp_name,
+         dept_no ));
