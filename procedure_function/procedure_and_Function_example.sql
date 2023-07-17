@@ -33,3 +33,43 @@ WHERE
     emp_no = pin_empno 
 RETURNING sal INTO pout_new_sal ;
 END UPDT_SAL_EMP ;
+
+--Calling procedure
+DECLARE
+    emp_no NUMBER := 131; -- Provide the employee number
+    per_sal NUMBER := 10; -- Provide the percentage increase
+    updated_sal NUMBER;
+BEGIN
+    UPDT_SAL_EMP(emp_no, per_sal, updated_sal);
+    DBMS_OUTPUT.PUT_LINE('Updated Salary: ' || updated_sal);
+END;
+
+--To check the updated values
+select * from t_emp_det where emp_no=131;
+
+--Return Keyword in procedure
+set serveroutput on
+begin
+    dbms_output.put_line('Printing--1');
+    return;
+    dbms_output.put_line('Printing--2');
+end;
+
+/* output
+Printing--1
+PL/SQL procedure successfully completed.
+*/
+
+-----Function----------------
+CREATE OR REPLACE FUNCTION func_add (
+    pin1 NUMBER,
+    pin2 NUMBER
+) RETURN NUMBER AS
+    lv_sum NUMBER;
+BEGIN
+    lv_sum := pin1 + pin2;
+    RETURN lv_sum;
+END;
+/
+    
+select func_add(5,5) from dual;--10
