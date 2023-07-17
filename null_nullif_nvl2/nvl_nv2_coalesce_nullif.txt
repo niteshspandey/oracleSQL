@@ -2,19 +2,19 @@
 
 NVL(Null Value)--two arguments
 
-select nvl('A','B') from dual;
-select nvl(null,'B') from dual;
-select nvl('A',null) from dual;
-select nvl(null,null) from dual;
+select nvl('A','B') from dual;--A
+select nvl('A',null) from dual;--A
+select nvl(null,'B') from dual;--B
+select nvl(null,null) from dual;--null
 
 NVL2(Null Value)--three arguments
 
-select NVL2('A','B','C') from dual;--if A is not null then value should be B otherwise it should be C
-select NVL2(null,'B','C') from dual;
-select NVL2('A',null,'C') from dual;
-select NVL2(null,null,'C') from dual;
-select NVL2('A',null,null) from dual;
-select NVL2(null,null,null) from dual;--return null
+select nvl2('A','B','C') from dual; --B
+select nvl2(null,'B','C') from dual; --C
+select nvl2('A',null,'C') from dual; --null
+select nvl2(null,null,'C') from dual; --C
+select nvl2(null,'B',null) from dual; --null
+select nvl2(null,null,null) from dual; --null
 
 nullif--two argument
 
@@ -23,11 +23,10 @@ select nullif(null,'B') from dual; --first value should not be null(Got error)
 select nullif('A',null) from dual;--if 2nd value is null then it return A
 select nullif(null,null) from dual;--got error
 select nullif('A','B') from dual;--if A and B  are not same then it return first element
-select nullif(null,null) from dual;--return null
 
 
 
-coalesce--take anu number of arguments
+coalesce--take any number of arguments
 return first non null value.
 
 select coalesce('A','B','C','D','E') from dual;--return A
