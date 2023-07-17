@@ -1,4 +1,5 @@
-/*Unpivot
+/*
+Unpivot
 
 to convert column value into row value we use unpivot method.
 it takes 2 argument
@@ -10,6 +11,8 @@ pivot
 The PIVOT clause is new for Oracle Database 11g and enables you to flip the rows into columns in the output from a query, 
 and, at the same time,allow you to run an aggregation function on the data
 
+Pivot and unpivot relational operator are used to generate a multidimensional reporting.
+Pivot table will contain three specific area mainly-rows,columns and values.
 
 */
 select * from (select 'welcome' cols1,
@@ -48,4 +51,4 @@ FROM (
 PIVOT (
   aggregate_function FOR pivot_column IN (list_of_values)
 )
-ORDER BY…;
+ORDER BYâ€¦;
