@@ -101,6 +101,14 @@ PERFORMANCE DEGRADE WHEN HIGH NO OF DML PERFORMED
 
 CREATE BITMAP INDEX IDX_BITMAP_DEPT_NO ON EMP_TABLE(DEPT_NO)
 CREATE BITMAP INDEX IDX2_BITMAP_DEPT_NO ON EMP(DEPT_NO);
+
+select * from V$OPTION WHERE PARAMETER = 'Bit-mapped indexes';
+Depending on the edition this feature(Bitmap) is anabled or not:
+
+Express Edition: FALSE
+Standard Edition: FALSE
+Enterprise Edition: TRUE
+
 */
 
 
