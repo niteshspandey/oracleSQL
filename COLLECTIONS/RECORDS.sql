@@ -20,6 +20,13 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('EMPLOYEE NO '||EMP_DATA_DET.EMP_NO);
 
 END;
+/*
+EMPLOYEE NAME NITESH
+EMPLOYEE NO 23
+
+PL/SQL procedure successfully completed.
+*/
+
 
 -----------------------------------------------------------------
 SET SERVEROUTPUT ON
@@ -34,6 +41,12 @@ BEGIN
 
 END;
 
+/*
+EMPLOYEE NAME SAM
+EMPLOYEE NO 23
+
+PL/SQL procedure successfully completed.
+*/
 ------------------------------------------------------------------
 SET SERVEROUTPUT ON
 DECLARE
@@ -50,6 +63,13 @@ BEGIN
 
 END;
 
+/*
+EMPLOYEE NAME Purnima
+EMPLOYEE NO 130
+
+PL/SQL procedure successfully completed.
+*/
+
 ---------------------------------------------------------------
 SET SERVEROUTPUT ON
 DECLARE
@@ -64,6 +84,12 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('EMPLOYEE NO '||EMP_DATA_DET.EMP_NO);
 
 END;
+/*
+EMPLOYEE NAME  
+EMPLOYEE NO 23
+
+PL/SQL procedure successfully completed.
+*/
 
 ----------------When the input value is null----------------------------------
 SET SERVEROUTPUT ON
@@ -79,3 +105,10 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('EMPLOYEE NO '||EMP_DATA_DET.EMP_NO);
 
 END;
+
+/*
+EMPLOYEE NAME NIL
+EMPLOYEE NO 23
+
+PL/SQL procedure successfully completed.
+*/
