@@ -33,3 +33,18 @@ SELECT * FROM T WHERE C>30 OR C>50 OR C>70;
 -- <ANY (LESS THAN GREATEST NUMBER)---
 SELECT * FROM T WHERE C<ANY(30,50,70);
 SELECT * FROM T WHERE C<30 OR C<50 OR C<70;
+
+
+--any vs all comparison
+
+select * from t where c >ALL(30,50,70);--greater than greatest number (80,90,100)
+select * from t where c >any(30,50,70);--greater than lowest number (40,50,60,70,80,90,100)
+
+select * from t where c >=ALL(30,50,70);--greater than greatest number (70,80,90,100)
+select * from t where c >=any(30,50,70);--greater than lowest number (30,40,50,60,70,80,90,100)
+
+select * from t where c <ALL(30,50,70);--less than lowest number.(10,20)
+select * from t where c <any(30,50,70);--less than greates number.(10,20,30,40,50,60)
+
+select * from t where c <=ALL(30,50,70);--less than lowest number.(10,20,30)
+select * from t where c <=any(30,50,70);--less than greates number.(10,20,30,40,50,60,70)
