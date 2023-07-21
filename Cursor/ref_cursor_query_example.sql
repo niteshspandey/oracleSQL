@@ -1,3 +1,5 @@
+---By default ref cursor is weakly typed ref cursor.
+---sys ref cursor is also weakly types ref cursor.
 ---Simple ref cursor
 
 clear screen;
