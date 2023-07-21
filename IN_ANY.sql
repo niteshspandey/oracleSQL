@@ -1,5 +1,20 @@
 --IN VS ANY
 
+/*
+--Use the ANY operator in a WHERE clause to compare a value with any of the values in a list.
+--You must place an =, <>, <, >, <=, or >= operator before ANY.
+
+IN- Equal to any member in the list
+ANY- Compare value to **each** value returned by the subquery
+ALL- Compare value to **EVERY** value returned by the subquery
+
+<ANY() - less than maximum
+>ANY() - more than minimum
+=ANY() - equivalent to IN
+>ALL() - more than the maximum
+<ALL() - less than the minimum
+*/
+
 SELECT * FROM T;
 
 
