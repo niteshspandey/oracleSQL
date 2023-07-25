@@ -113,6 +113,11 @@ insert into travels values('MUM','PUN',1500);
 select distinct least(src,dest),
 greatest(src,dest),fair
 from travels;
+/*
+CHN	MUM	500
+MUM	PUN	1500
+HYB	MUM	500
+*/
 
 ---what is private procedure?how to access private procedure/function??
 --we never create procedure if it is declare in package specification
@@ -247,21 +252,45 @@ sys.dbms_metadata.get_ddl('table','emp')
 from dual;
 
 --find the dubplicate values from travels table
+
+select * from travels;
+/*
+MUM	CHN	500
+CHN	MUM	500
+HYB	MUM	500
+MUM	HYB	500
+MUM	PUN	1500
+*/
+
 select least(src,dest) city1 ,
 greatest(src,dest) city2 ,
 fair --count(*)
 from travels group by least(src,dest),greatest(src,dest),fair having count(*)>1;
+/*
+CHN	MUM	500
+HYB	MUM	500
+*/
 
 --use of with clause
 --it is called as common table expression(CTE) 
 --it is temporary table it help to reduce complexity of code.
 
-with t as (
-select 'welcome' d from dual)
-select  substr(d,level),
-        substr(d,1,level),
-        substr(d,level,1)
-from t connect by level<=length(d);
+with data as
+(select 'welcome' d from dual)
+select substr(d,level),
+       substr(d,1,level),
+       substr(d,level,1) from data 
+connect by level<=length(d);
+/*
+
+welcome	  w	        w
+elcome	  we	    e
+lcome	  wel	    l
+come	  welc	    c
+ome	      welco	    o
+me	      welcom	m
+e	      welcome	e
+*/
 
 
 ----get the diagonal data from metrix(work well for only 3 rows)
@@ -272,29 +301,76 @@ insert into t values(40,50,60);
 insert into t values(70,80,90);
 
 
-select decode(rownum,1,c1)||
-decode(rownum,2,c2)||
-decode(rownum,3,c3) digonal_elements from t;
+SELECT
+    decode(ROWNUM, 1, c1)
+    || decode(ROWNUM, 2, c2)
+    || decode(ROWNUM, 3, c3) AS daigonal_element
+FROM
+    t;
+/*
+10
+50
+90
+*/
 
-select decode(rownum,1,c1,0)+
-decode(rownum,2,c2,0)+
-decode(rownum,3,c3,0) digonal_elements from t;
+SELECT
+    decode(ROWNUM, 1, c1, 0) + 
+    decode(ROWNUM, 2, c2, 0) + 
+    decode(ROWNUM, 3, c3, 0) diagonal_elelemt
+FROM
+    t;
 
-select decode(rownum,1,c1,2,c2,3,c3) c
-from t;
+/*
+10
+50
+90
+*/
 
-select case when rownum=1 then c1
-            when rownum=2 then c2
-            when rownum=3 then c3  end c
-from t;
+SELECT
+    decode(ROWNUM, 1, c1, 2, c2,
+           3, c3) AS diagonal_element
+FROM
+    t;
+
+/*
+10
+50
+90
+*/
+
+
+    
+SELECT
+    CASE
+        WHEN ROWNUM = 1 THEN c1
+        WHEN ROWNUM = 2 THEN c2
+        WHEN ROWNUM = 3 THEN c3
+    END daigonal_elelemt
+FROM
+    t;
+/*
+10
+50
+90
+*/
 
 --more then 3 rows
 insert into t values(1,2,3);
 insert into t values(4,5,6);
 insert into t values(7,8,9);
 
-select decode(mod(rownum,3),1,c1,2,c2,0,c3) diagonal_value 
-from t;
+select 
+        decode(mod(rownum,3),1,c1,2,c2,0,c3) daigonal_element
+        from t;
+
+/*
+10
+50
+90
+1
+5
+9
+*/
 
 --
 drop table t;
@@ -315,7 +391,20 @@ max(decode(rownum,2,c4)) c4,
 max(decode(rownum,3,c5)) c5,
 max(decode(rownum,3,c6)) c6
 from t;
+/*
+A1	A2	B3	B4	C5	C6
+*/
 
+select max(decode(mod(rownum,3),1,c1)) c1,
+       max(decode(mod(rownum,3),1,c2)) c2,
+       max(decode(mod(rownum,3),2,c3)) c3,
+       max(decode(mod(rownum,3),2,c4)) c4,
+       max(decode(mod(rownum,3),0,c5)) c5,
+       max(decode(mod(rownum,3),0,c6)) c6
+from t group by ceil(rownum/3);
+/*
+A1	A2	B3	B4	C5	C6
+*/
 --
 
 insert into t values('D1','D2','D3','D4','D5','D6');
@@ -332,14 +421,20 @@ max(decode(mod(rownum,3),2,c4)) c4,
 max(decode(mod(rownum,3),0,c5)) c5,
 max(decode(mod(rownum,3),0,c6)) c6
 from t group by ceil(rownum/3); 
-
+/*
+A1	A2	B3	B4	C5	C6
+D1	D2	E3	E4	F5	F6
+*/
 
 
 select listagg(level*3,',') within group (order by rownum desc)from dual connect by level<=100/3;
+/*
+99,96,93,90,87,84,81,78,75,72,69,66,63,60,57,54,51,48,45,42,39,36,33,30,27,24,21,18,15,12,9,6,3
+*/
 
 select listagg(r,',') within group (order by r desc)from
 (select level r from dual connect by level<=100) where mod(r,3)=0 ;
-
+/* 3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84,87,90,93,96,99 */
 --pivot example
 
 create table stud_marks
@@ -352,6 +447,14 @@ select * from stud_marks
 unpivot 
 (mark for column_name in (marks1,marks2,marks3));
 
+/*
+nitesh	MARKS1	50
+nitesh	MARKS2	60
+nitesh	MARKS3	70
+sam	    MARKS1	70
+sam	    MARKS2	60
+sam	    MARKS3	90   
+*/
 
 --------
 create table stud_subject
