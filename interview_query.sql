@@ -487,12 +487,47 @@ insert into t values('test');
 insert into t values(100);
 insert into t values(7);
 
+select * from t;
+/*
+1
+1234
+nitesh
+sds
+a.b.c
+test
+100
+7
+*/
+
+select * from t where not REGEXP_LIKE (c,'^[a-zA-Z]');
+/*
+1
+1234
+100
+7
+*/
+
+select * from t where  REGEXP_LIKE (c,'^[a-zA-Z]');
+/*
+nitesh
+sds
+a.b.c
+test
+*/
+
 select c from t 
 where cast(c as number default -999 on conversion error)=1
 union all
 select c from t 
 where cast(c as number default -999 on conversion error)=-999;
 
+/*
+1
+nitesh
+sds
+a.b.c
+test
+*/
 --
 select * from t;
 drop table t;
@@ -500,14 +535,35 @@ create table t (c number);
 insert into t values(1);
 insert into t values(2);
 insert into t values(3);
+insert into t values(4);
 
 select * from t
 union all
 select * from t order by 1 asc;
+/*
+1
+1
+2
+2
+3
+3
+4
+4
+*/
 
 select c from t,
 (select level from dual connect by level<=2) order by 1 asc;
 
+/*
+1
+1
+2
+2
+3
+3
+4
+4
+*/
 
 ---find parent id who have only one male and female child
 
@@ -536,6 +592,11 @@ group by parent_id
 having count(case when child='Male' then 1 end)=1 and
        count(case when child='Female' then 1 end)=1
 order by 1;
+/*
+3	1	1
+6	1	1
+*/
+
 
 --method2
 select distinct parent_id from (
@@ -543,6 +604,10 @@ select parent_id,child,count(*) over (partition by parent_id) c,
 count(case when child='Male' then 1 end) over (partition by parent_id) M,
 count(case when child='Female' then 1 end) over (partition by parent_id) F
 from family) where m=1 and f=1;
+/*
+3
+6
+*/
 
 --method3
 select m.parent_id from (select parent_id,count(*) from family where 
@@ -550,8 +615,11 @@ child='Male' group by parent_id
 having count(*)=1)M,
 (select parent_id,count(*) from family where
 child='Female' group by parent_id having count(*)=1) F
-where m.parent_id=f.parent_id
-;
+where m.parent_id=f.parent_id;
+/*
+6
+3
+*/
 
 --method-4
 with d as (select parent_id
@@ -564,13 +632,23 @@ where
 child='Female' 
 group by parent_id having count(*)=1) 
 select * from d order by 1;
-
+/*
+3
+6
+*/
+    
 --method1
-with d as (select 'ABCD' as str,4 as seq from dual)
+with d as (select 'ABCD' as str from dual)
 select str,
 level,
 substr(str,level,1) 
 from d connect by level<=length(str);
+/*
+ABCD	1	A
+ABCD	2	B
+ABCD	3	C
+ABCD	4	D
+*/
 
 --method2
 with d as (select 'ABCD' as str ,4 as seq from dual )
@@ -579,10 +657,27 @@ with d as (select 'ABCD' as str ,4 as seq from dual )
  substr(str,mod(level,length(str))+1,1)||ceil(level/length(str)) as c4  
  from d connect by level<=length(str) * seq
  order by 2,3;--or use this syntax for ordering substr(str,mod(level,length(str))+1,1)||ceil(level/length(str)) asc
- 
+ /*
+ABCD	1	A1
+ABCD	1	A2
+ABCD	1	A3
+ABCD	1	A4
+ABCD	2	B1
+ABCD	2	B2
+ABCD	2	B3
+ABCD	2	B4
+ABCD	3	C1
+ABCD	3	C2
+ABCD	3	C3
+ABCD	3	C4
+ABCD	4	D1
+ABCD	4	D2
+ABCD	4	D3
+ABCD	4	D4
+*/
  
 ------------------------------------------------------
- create table transaction_data(
+create table transaction_data(
 id number, type varchar2(10),amount number);
 
 insert into transaction_data values(1,'C',10000);
@@ -596,13 +691,26 @@ select id,type,amount,
 sum(decode(type,'D',amount)) over (order by id) d_a,*/
  sum(decode(type,'C',amount)) over (order by id) - sum(nvl(decode(type,'D',amount),0)) over (order by id) cum_amount
 from transaction_data;
+/*
+1	C	10000	10000
+2	D	2000	8000
+3	C	10000	18000
+4	D	5000	13000
+5	D	4000	9000
+*/
 
 select id,
 type,
 amount,
 sum(decode(type,'C',amount,'D',amount *-1)) 
 over (order by id) cum_amount from transaction_data;
-
+/*
+1	C	10000	10000
+2	D	2000	8000
+3	C	10000	18000
+4	D	5000	13000
+5	D	4000	9000
+*/
 
 with d as (select  level l from dual connect by level<=5)
 select l,(
@@ -610,6 +718,10 @@ select  listagg(level) within group(order by level)
 from dual connect by level<=l)
 from d;
 
+or
+
+with d as (select  '12345' str from dual)
+select substr(str,1,level) from d connect by level<=length(str);
 /*
 1
 12
@@ -652,6 +764,20 @@ select c_name
 from country 
 order by case when c_name='india' then 1 else 2 end;
 
+
+SELECT c_name
+FROM country
+ORDER BY
+    decode(c_name, 'india', 1, 2);
+
+/*
+india
+australia
+bhutan
+nepal
+china
+turkey
+*/
 
 ------------------
 create table c(c1 varchar2(10),c2 number);
