@@ -788,8 +788,30 @@ insert into c values('C',3);
 insert into c values('C',3);
 insert into c values('C',3);
 
+/*--lateral
+The lateral keyword represents a lateral join between two or more tables. 
+It joins the output of the outer query with the output of the underlying 
+lateral subquery. It is like a for-each loop in SQL where the subquery iterates
+through each row of the concerned table, evaluating the subquery for each row. */
+
 select * from c;
 select c1,c2 from c,lateral(select level l  from dual connect by level <=c2);
+/*
+A	1
+B	2
+B	2
+B	2
+B	2
+C	3
+C	3
+C	3
+C	3
+C	3
+C	3
+C	3
+C	3
+C	3
+*/
 
 drop table t;
 create table t (c varchar2(10));
@@ -799,6 +821,13 @@ insert into t values('X,Y,Z');
 
 select regexp_substr(c,'[^,]+',l) from t,
 lateral (select level l from dual connect by level<=regexp_count(c,',')+1);
+/*
+A
+B
+X
+Y
+Y
+*/
 
 
 --no operation(NULL).do nothing
