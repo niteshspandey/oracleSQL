@@ -1015,15 +1015,21 @@ select rownum,
 8	0	2
 9	1	3
 */
-        
+
+--Find the length of character 'A' or 'a' present in given string
 with d as 
     (select  'aaAAdhfdhvbdA' s from dual)
 select 
     length(s)- length(replace(upper(s),'A'))
 res from d;
+/*
+5
+*/
 
 select regexp_count('aaAAdhfdhvbdA','A|a') res from dual;
-
+/*
+5
+*/
 
 ----------find day in each month
 with year as (select 2024 y from dual)
