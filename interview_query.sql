@@ -872,24 +872,46 @@ insert into t values(-2);
 insert into t values(-3);
 insert into t values(-4);
 
+
+select sum(c) from t where c>0
+union all
+select sum(c) from t where c<0;
+/*
+6
+-10
+*/
+
 select
 (select sum(c) Positive_Number from t where c>0) positive,
 (select sum(c) Negative_Number from t where c<0) negative from dual;
+
+/*
+6	-10
+*/
 
 select 
 sum(decode(sign(c),1,c)) p, 
 sum(decode(sign(c),-1,c)) n
 from t;
+/*
+6	-10
+*/
 
 select 
 sum(case when c>0 then c end) p,
 sum(case when c<0 then c end) n
 from t;
+/*
+6	-10
+*/
 
 select 'Positive' sign,sum(c) from t where c>0
 union all
 select 'Negative' sign,sum(c) from t where c<0;
-
+/*
+Positive	6
+Negative	-10
+*/
 
 --------------------
 select * from t;
@@ -904,10 +926,50 @@ insert into t values(11);
 insert into t values(22);
 
 select c from t order by to_char(c);
+/*
+1
+11
+2
+22
+3
+*/
+
 select c from t order by cast(c as varchar2(10));
+/*
+1
+11
+2
+22
+3
+*/
+
 select c from t order by c||'';
-select c,substr(c,1,1) from t order by substr(c,1,1);
+/*
+1
+11
+2
+22
+3
+*/
+
+select substr(c,1) from t order by substr(c,1,1);
+/*
+1
+11
+2
+22
+3
+*/
+
 select c,ascii(c) from t order by ascii(c);
+/*
+1	49
+11	49
+2	50
+22	50
+3	51
+*/
+
 
 drop table t;
 select * from t;
@@ -924,13 +986,35 @@ select id,col2 from t
 union 
 select id,cols3 from t)
 group by id;
+/*
+1	A,B,C
+2	A,B
+3	A
+*/
 
 select id,listagg(distinct val,',') result from (select * from t) unpivot(val for colummn_name in(cols1,col2,cols3)) group by id;
+/*
+1	A,B,C
+2	A,B
+3	A
+*/
+
 
 select rownum,
         mod(rownum,2) mod2,
         decode(mod(rownum,3),0,3,mod(rownum,3)) mod3
         from dual connect by level<=9;
+/*
+1	1	1
+2	0	2
+3	1	3
+4	0	1
+5	1	2
+6	0	3
+7	1	1
+8	0	2
+9	1	3
+*/
         
 with d as 
     (select  'aaAAdhfdhvbdA' s from dual)
