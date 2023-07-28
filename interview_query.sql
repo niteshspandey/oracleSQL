@@ -1040,9 +1040,31 @@ select --y,
         to_char(last_day(to_date(trim(to_char(level,'00'))||y,'MMYYYY')),'DD') no_of_day
         from year connect by level<=12;
 
+/*
+JANUARY  	31
+FEBRUARY 	29
+MARCH    	31
+APRIL    	30
+MAY      	31
+JUNE     	30
+JULY     	31
+AUGUST   	31
+SEPTEMBER	30
+OCTOBER  	31
+NOVEMBER 	30
+DECEMBER 	31
+*/
 
 --add space between given string
 select 'welcome',regexp_replace('welcome','()','\1 ')  from dual;
+/*
+welcome	 w e l c o m e 
+*/
+
+select 'welcome',regexp_replace('welcome','()',' ')  from dual;
+/*
+welcome	 w e l c o m e 
+*/
 
 --find anagram
 with ds as (select 'tag' s1 ,'man' s2 from dual)
@@ -1052,6 +1074,9 @@ s2,
 --sum(b),
 case when sum(a)=sum(b) then 'Valid Anagram' else 'Not Valid Anagram' end op  
 from (select s1,s2,ora_hash(substr(s1,level,1)) a,ora_hash(substr(s2,level,1)) b from ds connect by level<=length(s1)) group by s1,s2;
+/*
+tag	man	Not Valid Anagram
+*/
 
 --
 drop table t;
@@ -1060,17 +1085,27 @@ insert into t values(12453);
 insert into t values(895);
 insert into t values(5438);
 
+---sort values of each row in ascending order.
 with ds as (select rownum r,c from t)
-select r,listagg(substr(c,l,1)) within group(order by 1) from ds,
+select r,listagg(substr(c,l,1)) within group(order by substr(c,l,1)) from ds,
 lateral (select level l from dual connect by level<=length(c))
 group by r
 order by r;
+/*
+12345
+589
+3458
+*/
 
 
 --find no of days without usng last_day method
 with d as (select to_date('17-Feb-2023','DD-MON-YYYY') as t from dual)
 select last_day(t),
 add_months(trunc(t,'MONTH'),1)-1 from d;
+/*
+28-FEB-23	28-FEB-23
+*/
+
 
 --Input-Nit2133	
 --Output-NiG3177
@@ -1140,8 +1175,12 @@ virtual column
 */
 
 create table virtual_tbl(a number,b number, c as (a+b));
-insert into virtual_tbl(a,b) values(1,2);
+insert into virtual_tbl(a,b) values(10,20);
 select * from virtual_tbl;
+
+/*
+10	20	30
+*/
 
 
 /*
@@ -1245,7 +1284,7 @@ end;
 
 ----
 clear screen
-create or replace procedure test1_demo(p_value IN OUT varchar2,lv_temp IN OUT number)--formal parameter 
+create or replace procedure test1_demo(p_value IN OUT varchar2,lv_temp IN OUT number)--Actual parameter 
 as
 begin
     p_value:='B';
@@ -1257,7 +1296,7 @@ declare
     lv_char varchar2(2);
     lv_temp number;
 begin
-    lv_char:='A';--actual parameter
+    lv_char:='A';--Formal parameter
     lv_temp:=1/0;
     begin
     test1_demo(lv_char,lv_temp);
@@ -1267,10 +1306,69 @@ begin
     dbms_output.put_line('return value from procedure is:'||lv_char);
 end;
 
+/*
+Actual Parameter
+1.When a function is called, the values (expressions) that are passed in the function call are called the arguments or actual parameters.	
+2.There is no need to specify datatype in actual parameter. 
+    
+Formal Parameter
+1. The parameter used in function definition statement which contain data type on its time of declaration is called formal parameter.
+2.The datatype of the receiving value must be defined.
+*/
+
+/*
+Oracle has 2 method of passing out and inout parameter in plsql code.
+1.pass by reference.
+2.pass by value.
+*/
+--Pass by value example
+
+create or replace procedure proc_p1(pin in out varchar2)
+as
+begin
+    pin :='B';
+end;
+/
+
+declare
+lv_val varchar2(2);
+begin
+    lv_val:='A';
+    proc_p1(lv_val);
+    dbms_output.put_line('Value of variable is:'||lv_val);
+end;
+
+/*
+Value of variable is:B
+PL/SQL procedure successfully completed.
+*/
+
+--Pass by reference
+create or replace procedure proc_p2(pin in out nocopy varchar2)
+as
+begin
+    pin :='C';
+end;
+/
+
+declare
+lv_val varchar2(2);
+begin
+    lv_val:='D';
+    proc_p2(lv_val);
+    dbms_output.put_line('Value of variable is:'||lv_val);
+end;
+
+/*
+Value of variable is:C
+PL/SQL procedure successfully completed.
+*/
 
 /*NO copy hint
 NOCOPY is a hint provide to compiler to use "PASS BY REFERENCE",there are many scenarios that compiler may ignore this also.
 NOCOPY hint is applicable for out and inout parameter only.
+No copy hint tells the plsql compiler to pass out and inout parameter by reference rather then pass by value.
+It reduce the overhead of passing parameters to improve the performance of pl/sql code.
 
 */
 clear screen
@@ -1325,11 +1423,18 @@ end;
 ---Recursive function example
 
 with t(n) as 
-(select 1 from dual --anchor memebr
+(select 1 from dual --anchor member
 union all
 select n+1 from t where n<5 --recursive member
 )
 select * from t;
+/*
+1
+2
+3
+4
+5
+*/
      
 
 with t(n1,n2) as
@@ -1339,7 +1444,13 @@ union all
 select n1+1,n2||'A'
 from t where n1<5)
 select * from t;
-
+/*
+1	A
+2	AA
+3	AAA
+4	AAAA
+5	AAAAA
+*/
 
 ---DML FOR LOGGING
 drop table source_1;
@@ -1366,7 +1477,7 @@ SELECT * FROM err$_emp2;
 
 
 INSERT INTO EMP2 SELECT * FROM SOURCE_1 
-LOG ERRORS INTO ERR$_EMP2 REJECT LIMIT UNLIMITED;
+LOG ERRORS INTO ERR$_EMP2 REJECT LIMIT UNLIMITED; --insert the data with no error instead of complete rollback of status.
 
 
 --LOG ERRORS INTO ERR$_EMP2('MY TEST INSERT') REJECT LIMIT UNLIMITED;--ASSIGN TAG TO ERROR
