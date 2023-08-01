@@ -56,6 +56,27 @@ select * from
 (select emp_no,emp_name,job
 from t_emp) unpivot (col_val for column_name in (emp_no,emp_name,job));
 
+EMP_NO	        1
+EMP_NAME	Nitesh
+JOB	        Executive
+EMP_NO	        2
+EMP_NAME	Sarvesh
+JOB	        Carpenter
+EMP_NO	        3
+EMP_NAME	Sam
+JOB	        Admin
+EMP_NO	        4
+EMP_NAME	Tara
+JOB	        Housewife
+EMP_NO	        5
+EMP_NAME	Purnima
+JOB	        Engineer
+EMP_NO	        6
+EMP_NAME	Arun
+JOB	        BigData
+
+
+
 --Pivot
 SELECT *
 FROM (
