@@ -13,6 +13,11 @@
 -- insert into emp values('Tara',11);
 
 
+RANK() gives you the ranking within your ordered partition. Ties are assigned the same rank, 
+with the next ranking(s) skipped. So, if you have 3 items at rank 2, the next rank listed would be ranked 5.
+
+DENSE_RANK() again gives you the ranking within your ordered partition, but the ranks are consecutive. 
+No ranks are skipped if there are ranks with multiple items.
 
 
 -- select emp.,rank() over(order by name) rnk,
