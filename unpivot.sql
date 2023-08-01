@@ -22,6 +22,19 @@ select * from (select 'welcome' cols1,
 from dual)
 unpivot(cols_val for columns_name in (cols1,cols2,cols3,cols4));
 
+/*
+i/p-
+welcome	to	home	nitesh
+
+o/p-
+COLS1	welcome
+COLS2	to
+COLS3	home
+COLS4	nitesh
+
+*/
+
+
 select 'welcome' cols1,
         'to' cols2,
         'home' cols3,
